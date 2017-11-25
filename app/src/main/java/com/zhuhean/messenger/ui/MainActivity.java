@@ -97,10 +97,15 @@ public class MainActivity extends BaseActivity implements PermissionCallback {
     }
 
     private void showMain() {
-        hideActionBarShadow();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new MainFragment())
-                .commit();
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideActionBarShadow();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container, new MainFragment())
+                        .commit();
+            }
+        }, 300);
     }
 
     private void readSms() {
@@ -122,12 +127,7 @@ public class MainActivity extends BaseActivity implements PermissionCallback {
             cursor.close();
         }
         Remember.putBoolean(HAS_READ_SMS, true);
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showMain();
-            }
-        }, 500);
+        showMain();
     }
 
     @Override
