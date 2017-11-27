@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
 import com.zhuhean.messenger.model.TextMessage;
-import com.zhuhean.messenger.ui.base.TabViewPagerFragment;
+import com.zhuhean.library.base.TabViewPagerFragment;
 
 /**
  * @author zhuhean

@@ -1,6 +1,6 @@
 package com.zhuhean.messenger.ui;
 
-import com.zhuhean.messenger.ui.base.BaseActivity;
+import com.zhuhean.library.base.BaseActivity;
 
 /**
  * Created by zhuhean on 12/11/2017.

@@ -12,7 +12,7 @@ import com.zhuhean.messenger.helper.Helper;
 import com.zhuhean.messenger.helper.NotificationHelper;
 import com.zhuhean.messenger.model.TextMessage;
 import com.zhuhean.messenger.model.TextMessageDao;
-import com.zhuhean.messenger.ui.widget.Toasty;
+import com.zhuhean.library.widget.Toasty;
 
 /**
  * @author zhuhean

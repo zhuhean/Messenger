@@ -17,14 +17,14 @@ import android.view.MenuItem;
 
 import com.zhuhean.messenger.App;
 import com.zhuhean.messenger.R;
-import com.zhuhean.messenger.component.Remember;
-import com.zhuhean.messenger.component.permission.EasyPermission;
-import com.zhuhean.messenger.component.permission.PermissionCallback;
+import com.zhuhean.library.component.Remember;
+import com.zhuhean.library.component.permission.EasyPermission;
+import com.zhuhean.library.component.permission.PermissionCallback;
 import com.zhuhean.messenger.helper.Helper;
 import com.zhuhean.messenger.model.TextMessage;
 import com.zhuhean.messenger.model.TextMessageDao;
-import com.zhuhean.messenger.ui.base.BaseActivity;
-import com.zhuhean.messenger.ui.widget.Toasty;
+import com.zhuhean.library.base.BaseActivity;
+import com.zhuhean.library.widget.Toasty;
 
 public class MainActivity extends BaseActivity implements PermissionCallback {
 

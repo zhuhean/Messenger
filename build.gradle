@@ -1,13 +1,32 @@
 buildscript {
-    
+
+    ext.versions = [
+            'minSdk'        : 15,
+            'compileSdk'    : 26,
+
+            'supportLibrary': '27.0.1',
+            'gradlePlugin'  : '3.0.1',
+            'androidTools'  : '26.0.0',
+    ]
+
+    ext.dependences = [
+            'compat'     : "com.android.support:support-compat:${versions.supportLibrary}",
+            'design'     : "com.android.support:design:${versions.supportLibrary}",
+            'annotations': "com.android.support:support-annotations:${versions.supportLibrary}",
+            'constraint' : 'com.android.support.constraint:constraint-layout:1.0.2',
+            'butterknife': 'com.jakewharton:butterknife:8.8.1'
+    ]
+
     repositories {
         google()
         jcenter()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath "com.android.tools.build:gradle:${versions.gradlePlugin}"
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
     }
+
 }
 
 allprojects {

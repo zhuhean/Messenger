@@ -6,3 +6,9 @@
 /build
 /captures
 .externalNativeBuild
+build/generated/res/pngs/androidTest/
+build/generated/res/rs/
+build/generated/source/aidl/
+build/generated/source/r/debug/com/zhuhean/library/
+build/generated/source/rs/
+libs/

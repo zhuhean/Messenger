@@ -7,8 +7,7 @@ import android.view.View;
 import com.zhuhean.messenger.App;
 import com.zhuhean.messenger.model.TextMessage;
 import com.zhuhean.messenger.model.TextMessageDao;
-import com.zhuhean.messenger.ui.adapter.MessageAdapter;
-import com.zhuhean.messenger.ui.base.RecyclerViewFragment;
+import com.zhuhean.library.base.RecyclerViewFragment;
 
 import java.util.List;
 

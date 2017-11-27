@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.zhuhean.messenger.R;
-import com.zhuhean.messenger.ui.base.BaseActivity;
+import com.zhuhean.library.base.BaseActivity;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
