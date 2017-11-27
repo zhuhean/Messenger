@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -15,21 +16,54 @@ import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.zhuhean.messenger.App;
-import com.zhuhean.messenger.R;
+import com.zhuhean.library.base.BaseActivity;
 import com.zhuhean.library.component.Remember;
 import com.zhuhean.library.component.permission.EasyPermission;
 import com.zhuhean.library.component.permission.PermissionCallback;
+import com.zhuhean.library.widget.Toasty;
+import com.zhuhean.messenger.App;
+import com.zhuhean.messenger.R;
 import com.zhuhean.messenger.helper.Helper;
 import com.zhuhean.messenger.model.TextMessage;
 import com.zhuhean.messenger.model.TextMessageDao;
-import com.zhuhean.library.base.BaseActivity;
-import com.zhuhean.library.widget.Toasty;
 
 public class MainActivity extends BaseActivity implements PermissionCallback {
 
     private static final String HAS_READ_SMS = "HAS_READ_SMS";
     private static final Uri SMS_URI = Uri.parse("content://sms");
+    private ReadSmsTask task;
+
+    private class ReadSmsTask extends AsyncTask<Void, Void, Void> {
+
+        private int count = 100;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            TextMessageDao dao = App.daoSession().getTextMessageDao();
+            ContentResolver resolver = getContentResolver();
+            Cursor cursor = resolver.query(SMS_URI, null, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    if (count-- == 0) break;
+                    TextMessage message = new TextMessage();
+                    message.setContent(cursor.getString(cursor.getColumnIndexOrThrow("body")));
+                    message.setFrom(cursor.getString(cursor.getColumnIndexOrThrow("address")));
+                    message.setTimestamp(cursor.getLong(cursor.getColumnIndexOrThrow("date")));
+                    dao.insert(message);
+                    cursor.moveToNext();
+                }
+                cursor.close();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Remember.putBoolean(HAS_READ_SMS, true);
+            showMain();
+        }
+    }
 
     @Override
     public int getContentView() {
@@ -54,7 +88,7 @@ public class MainActivity extends BaseActivity implements PermissionCallback {
         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startIntent();
+                startChangeDefault();
             }
         });
         dialog.setNegativeButton("不行", null);
@@ -62,7 +96,7 @@ public class MainActivity extends BaseActivity implements PermissionCallback {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void startIntent() {
+    private void startChangeDefault() {
         Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
         intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, getPackageName());
         startActivity(intent);
@@ -84,7 +118,8 @@ public class MainActivity extends BaseActivity implements PermissionCallback {
         if (Remember.getBoolean(HAS_READ_SMS, false)) {
             showMain();
         } else {
-            readSms();
+            task = new ReadSmsTask();
+            task.execute();
         }
         if (!Helper.isDefaultSmsApp(this)) {
             postDelayed(new Runnable() {
@@ -97,7 +132,7 @@ public class MainActivity extends BaseActivity implements PermissionCallback {
     }
 
     private void showMain() {
-        postDelayed(new Runnable() {
+        post(new Runnable() {
             @Override
             public void run() {
                 hideActionBarShadow();
@@ -105,30 +140,17 @@ public class MainActivity extends BaseActivity implements PermissionCallback {
                         .add(R.id.container, new MainFragment())
                         .commit();
             }
-        }, 300);
+        });
     }
 
-    private void readSms() {
-        int count = 50;
-        TextMessageDao dao = App.daoSession().getTextMessageDao();
-        ContentResolver resolver = getContentResolver();
-        Cursor cursor = resolver.query(SMS_URI, null, null, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                if (count-- == 0) break;
-                TextMessage message = new TextMessage();
-                message.setContent(cursor.getString(cursor.getColumnIndexOrThrow("body")));
-                message.setFrom(cursor.getString(cursor.getColumnIndexOrThrow("address")));
-                message.setTimestamp(cursor.getLong(cursor.getColumnIndexOrThrow("date")));
-                dao.insert(message);
-                cursor.moveToNext();
-            }
-            cursor.close();
+    @Override
+    protected void onDestroy() {
+        if (task != null) {
+            task.cancel(true);
         }
-        Remember.putBoolean(HAS_READ_SMS, true);
-        showMain();
+        super.onDestroy();
     }
+
 
     @Override
     public void permissionRefused() {

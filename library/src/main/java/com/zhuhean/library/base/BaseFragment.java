@@ -9,13 +9,10 @@ import android.view.ViewGroup;
 
 public abstract class BaseFragment extends Fragment implements ContentViewHolder {
 
-    protected View rootView;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(getContentView(), container, false);
-        return rootView;
+        return inflater.inflate(getContentView(), container, false);
     }
 
     public void post(Runnable runnable) {

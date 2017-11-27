@@ -1,2 +1,2 @@
 # Messenger
-写了自己用的短信App
+写给自己用的短信App
